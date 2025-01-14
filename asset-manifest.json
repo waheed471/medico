@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/medico/static/css/main.3d8b2bdb.css",
-    "main.js": "/medico/static/js/main.879ad90a.js",
+    "main.js": "/medico/static/js/main.556a87dd.js",
     "static/js/488.cd44d2f4.chunk.js": "/medico/static/js/488.cd44d2f4.chunk.js",
     "index.html": "/medico/index.html",
     "main.3d8b2bdb.css.map": "/medico/static/css/main.3d8b2bdb.css.map",
-    "main.879ad90a.js.map": "/medico/static/js/main.879ad90a.js.map",
+    "main.556a87dd.js.map": "/medico/static/js/main.556a87dd.js.map",
     "488.cd44d2f4.chunk.js.map": "/medico/static/js/488.cd44d2f4.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.3d8b2bdb.css",
-    "static/js/main.879ad90a.js"
+    "static/js/main.556a87dd.js"
   ]
 }
