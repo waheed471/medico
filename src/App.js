@@ -6,18 +6,31 @@ import DataTable from "./components/DataTable";
 import "./App.css"
 
 function App() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+    const [collapsed, setCollapsed] = useState(false);
+
+    const toggleDrawer = () => {
+        setDrawerOpen((prev) => !prev);
+    };
+
+    const toggleCollapse = () => {
+        setCollapsed((prev) => !prev);
+    };
 
   return (
     <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
       {/* Sidebar */}
-      <Sidebar isOpen={isSidebarOpen} />
+      <Sidebar
+        drawerOpen={drawerOpen}
+        setDrawerOpen={setDrawerOpen}
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+      />
 
       {/* Main Content */}
       <div
         style={{
           flexGrow: 1,
-          marginLeft: isSidebarOpen ? 0 : 0,
           transition: "margin-left 0.3s",
           display: "flex",
           flexDirection: "column",
@@ -26,7 +39,7 @@ function App() {
       >
         {/* Scrollable TopBar */}
         <div style={{ overflowX: "auto" }}>
-          <TopBar toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+          <TopBar toggleSidebar={() =>{setDrawerOpen(false); toggleCollapse()}} toggleDrawer={()=>{setCollapsed(false); toggleDrawer()}} />
         </div>
 
         {/* Scrollable Filters and DataTable */}

@@ -12,8 +12,11 @@ import {
 import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import {
+    Menu,
+} from "@mui/icons-material";
 
-const TopBar = ({ toggleSidebar }) => {
+const TopBar = ({ toggleSidebar,toggleDrawer }) => {
   return (
     <AppBar
       position="sticky"
@@ -29,9 +32,21 @@ const TopBar = ({ toggleSidebar }) => {
       <Toolbar sx={{ justifyContent: "space-between" }}>
         {/* Left Section */}
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <IconButton  sx={{display: { xs: "none", sm: "block" }}} className="collapse-button" onClick={toggleSidebar}>
+                      <Menu />
+                  </IconButton>
+
+                  <IconButton  sx={{display: { xs: "block", sm: "none" }}} className="collapse-button" onClick={toggleDrawer}>
+                      <Menu />
+                  </IconButton>
           <Typography
             variant="h6"
-            sx={{ fontSize: "18px", fontWeight: "500", color: "#000" }}
+            sx={{
+              fontSize: "18px",
+              fontWeight: "500",
+              color: "#000",
+              display: { xs: "none", sm: "block" }, // Hide on mobile (xs), show on larger screens (sm and up)
+            }}
           >
             Lookup Types
           </Typography>

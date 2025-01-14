@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
     Box,
     List,
@@ -6,164 +6,191 @@ import {
     ListItemIcon,
     ListItemText,
     Collapse,
-    IconButton,
+    Drawer,
 } from "@mui/material";
 import {
     ExpandLess,
     ExpandMore,
-    Menu,
 } from "@mui/icons-material";
 import "./Sidebar.css";
 
-const Sidebar = () => {
-    const [open, setOpen] = useState({ generalSettings: true });
-    const [collapsed, setCollapsed] = useState(false);
-    const [activeSubmenu, setActiveSubmenu] = useState("Lookup Types");
+const Sidebar = ({ drawerOpen, setDrawerOpen, collapsed, setCollapsed }) => {
+
+    // State to track which submenu is active
+    const [activeSubmenu, setActiveSubmenu] = React.useState("Lookup Types");
+
+    // State to manage open/close of menu items (e.g., General Settings)
+    const [menuState, setMenuState] = React.useState({ generalSettings: true });
 
     const handleToggle = (menu) => {
-        setOpen((prev) => ({ ...prev, [menu]: !prev[menu] }));
+        setMenuState((prev) => ({ ...prev, [menu]: !prev[menu] }));
     };
 
     const handleSubmenuClick = (submenu) => {
-        setActiveSubmenu(submenu);
+        setActiveSubmenu(submenu); // Set the active submenu when clicked
     };
 
-    const toggleCollapse = () => {
-        setCollapsed((prev) => !prev);
+
+    const toggleDrawer = () => {
+        setDrawerOpen((prev) => !prev); // Toggle drawer open/close
     };
 
     return (
-        <Box className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-            {/* Top Section with Logo and Collapse Button */}
-            <Box className="sidebar-header">
-                {!collapsed && (
-                    <Box className="sidebar-logo">
-                        <img
-                            src="assets/logo.png" // Replace with your logo
-                            alt="MedicoJo Logo"
-                            className="logo-image"
-                        />
+        <>
+            {/* Mobile Drawer */}
+            <Drawer
+                anchor="left"
+                open={drawerOpen}
+                onClose={toggleDrawer}
+                sx={{
+                    display: { xs: "block", sm: "none" }, // Only show the drawer on mobile
+                }}
+            >
+                <Box className={`sidebar ${collapsed ? "collapsed" : ""}`} sx={{ width: 250 }}>
+                    <Box className="sidebar-header" sx={{ position: "relative" }}>
+                        {!collapsed && (
+                            <Box className="sidebar-logo">
+                                <img
+                                    src="assets/logo.png" // Replace with your logo
+                                    alt="MedicoJo Logo"
+                                    className="logo-image"
+                                />
+                            </Box>
+                        )}
                     </Box>
-                )}
-                <IconButton className="collapse-button" onClick={toggleCollapse}>
-                    <Menu />
-                </IconButton>
-            </Box>
 
-            {/* Menu */}
-            <List component="nav" className="sidebar-menu">
-                {/* Dashboard */}
-                <ListItem button className="menu-item">
-                    <ListItemIcon className="menu-icon">
-                        <img
-                            src="assets/dashboardIcon.png"
-                            alt="MedicoJo Logo"
-                            className="logo-image"
-                        />
-                    </ListItemIcon>
-                    {!collapsed && <ListItemText primary="Dashboard" className="menu-text" />}
-                </ListItem>
-
-                {/* General Settings */}
-                <ListItem
-                    button
-                    onClick={() => handleToggle("generalSettings")}
-                    className={`menu-item general-settings ${open.generalSettings ? "active" : ""
-                        }`}
-                >
-                    <ListItemIcon className="menu-icon">
-                        <img
-                            src="assets/settingsIcon.png"
-                            alt="MedicoJo Logo"
-                            className="logo-image"
-                        />
-                    </ListItemIcon>
-                    {!collapsed && (
-                        <>
-                            <ListItemText primary="General Settings" className="general-settings-menu-text" />
-                            {open.generalSettings ? <ExpandLess className="general-settings-menu-text" /> : <ExpandMore className="general-settings-menu-text" />}
-                        </>
-                    )}
-                </ListItem>
-                <Collapse in={!collapsed && open.generalSettings} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        <ListItem
-                            button
-                            className={`submenu-item ${activeSubmenu === "Lookup Types" ? "active" : ""
-                                }`}
-                            onClick={() => handleSubmenuClick("Lookup Types")}
-                        >
-                            <ListItemText primary="Lookup Types" className="submenu-text" />
-                        </ListItem>
-                        <ListItem
-                            button
-                            className={`submenu-item ${activeSubmenu === "Lookups" ? "active" : ""
-                                }`}
-                            onClick={() => handleSubmenuClick("Lookups")}
-                        >
-                            <ListItemText primary="Lookups" className="submenu-text" />
-                        </ListItem>
-                        <ListItem
-                            button
-                            className={`submenu-item ${activeSubmenu === "System Settings" ? "active" : ""
-                                }`}
-                            onClick={() => handleSubmenuClick("System Settings")}
-                        >
-                            <ListItemText primary="System Settings" className="submenu-text" />
+                    {/* Menu */}
+                    <List component="nav" className="sidebar-menu">
+                        {/* Dashboard */}
+                        <ListItem button className="menu-item">
+                            <ListItemIcon className="menu-icon">
+                                <img
+                                    src="assets/dashboardIcon.png"
+                                    alt="MedicoJo Logo"
+                                    className="logo-image"
+                                />
+                            </ListItemIcon>
+                            {!collapsed && <ListItemText primary="Dashboard" />}
                         </ListItem>
 
+                        {/* General Settings */}
                         <ListItem
                             button
-                            className={`submenu-item ${activeSubmenu === "Manage Screens" ? "active" : ""
-                                }`}
-                            onClick={() => handleSubmenuClick("Manage Screens")}
+                            onClick={() => handleToggle("generalSettings")}
+                            className={`menu-item general-settings ${menuState.generalSettings ? "active" : ""}`}
                         >
-                            <ListItemText primary="Manage Screens" className="submenu-text" />
+                            <ListItemIcon className="menu-icon">
+                                <img
+                                    src="assets/settingsIcon.png"
+                                    alt="MedicoJo Logo"
+                                    className="logo-image"
+                                />
+                            </ListItemIcon>
+                            {!collapsed && <ListItemText primary="General Settings" />}
+                            {menuState.generalSettings ? <ExpandLess /> : <ExpandMore />}
                         </ListItem>
+                        <Collapse in={menuState.generalSettings} timeout="auto" unmountOnExit>
+                            <List component="div" disablePadding>
+                                <ListItem
+                                    button
+                                    className={`submenu-item ${activeSubmenu === "Lookup Types" ? "active" : ""}`}
+                                    onClick={() => handleSubmenuClick("Lookup Types")}
+                                >
+                                    <ListItemText primary="Lookup Types" />
+                                </ListItem>
+                                {/* Other submenu items */}
+                            </List>
+                        </Collapse>
 
-                        <ListItem
-                            button
-                            className={`submenu-item ${activeSubmenu === "Approvals Settings" ? "active" : ""
-                                }`}
-                            onClick={() => handleSubmenuClick("Approvals Settings")}
-                        >
-                            <ListItemText primary="Approvals Settings" className="submenu-text" />
-                        </ListItem>
-
-                        <ListItem
-                            button
-                            className={`submenu-item ${activeSubmenu === "View Approvals" ? "active" : ""
-                                }`}
-                            onClick={() => handleSubmenuClick("View Approvals")}
-                        >
-                            <ListItemText primary="View Approvals" className="submenu-text" />
+                        {/* Additional Menu Items */}
+                        <ListItem button className="menu-item">
+                            <ListItemIcon className="menu-icon">
+                                <img
+                                    src="assets/userIcon.png"
+                                    alt="MedicoJo Logo"
+                                    className="logo-image"
+                                />
+                            </ListItemIcon>
+                            {!collapsed && <ListItemText primary="Users & Permissions" />}
                         </ListItem>
                     </List>
-                </Collapse>
+                </Box>
+            </Drawer>
 
-                {/* Additional Menu Items */}
-                <ListItem button className="menu-item">
-                    <ListItemIcon className="menu-icon">
-                        <img
-                            src="assets/userIcon.png"
-                            alt="MedicoJo Logo"
-                            className="logo-image"
-                        />
-                    </ListItemIcon>
-                    {!collapsed && <ListItemText primary="Users & Permissions" className="menu-text" />}
-                </ListItem>
-                <ListItem button className="menu-item">
-                    <ListItemIcon className="menu-icon">
-                        <img
-                            src="assets/clientIcon.png"
-                            alt="MedicoJo Logo"
-                            className="logo-image"
-                        />
-                    </ListItemIcon>
-                    {!collapsed && <ListItemText primary="Client Management" className="menu-text" />}
-                </ListItem>
-            </List>
-        </Box>
+            {/* Desktop Sidebar */}
+            <Box
+                className={`sidebar ${collapsed ? "collapsed" : ""}`}
+                sx={{ display: { xs: "none", sm: "block" } }} // Hide sidebar on mobile
+            >
+                <Box className="sidebar-header" sx={{ position: "relative" }}>
+                    {!collapsed && (
+                        <Box className="sidebar-logo">
+                            <img
+                                src="assets/logo.png" // Replace with your logo
+                                alt="MedicoJo Logo"
+                                className="logo-image"
+                            />
+                        </Box>
+                    )}
+                </Box>
+
+                {/* Menu */}
+                <List component="nav" className="sidebar-menu">
+                    {/* Dashboard */}
+                    <ListItem button className="menu-item">
+                        <ListItemIcon className="menu-icon">
+                            <img
+                                src="assets/dashboardIcon.png"
+                                alt="MedicoJo Logo"
+                                className="logo-image"
+                            />
+                        </ListItemIcon>
+                        {!collapsed && <ListItemText primary="Dashboard" />}
+                    </ListItem>
+
+                    {/* General Settings */}
+                    <ListItem
+                        button
+                        onClick={() => handleToggle("generalSettings")}
+                        className={`menu-item general-settings ${menuState.generalSettings ? "active" : ""}`}
+                    >
+                        <ListItemIcon className="menu-icon">
+                            <img
+                                src="assets/settingsIcon.png"
+                                alt="MedicoJo Logo"
+                                className="logo-image"
+                            />
+                        </ListItemIcon>
+                        {!collapsed && <ListItemText primary="General Settings" />}
+                        {menuState.generalSettings ? <ExpandLess /> : <ExpandMore />}
+                    </ListItem>
+                    <Collapse in={menuState.generalSettings} timeout="auto" unmountOnExit>
+                        <List component="div" disablePadding>
+                            <ListItem
+                                button
+                                className={`submenu-item ${activeSubmenu === "Lookup Types" ? "active" : ""}`}
+                                onClick={() => handleSubmenuClick("Lookup Types")}
+                            >
+                                <ListItemText primary={!collapsed  ?  "Lookup Types" : 'LT'} />
+                            </ListItem>
+                            {/* Other submenu items */}
+                        </List>
+                    </Collapse>
+
+                    {/* Additional Menu Items */}
+                    <ListItem button className="menu-item">
+                        <ListItemIcon className="menu-icon">
+                            <img
+                                src="assets/userIcon.png"
+                                alt="MedicoJo Logo"
+                                className="logo-image"
+                            />
+                        </ListItemIcon>
+                        {!collapsed && <ListItemText primary="Users & Permissions" />}
+                    </ListItem>
+                </List>
+            </Box>
+        </>
     );
 };
 
