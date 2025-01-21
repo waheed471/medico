@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -8,15 +8,29 @@ import {
   Select,
   Badge,
   Avatar,
+  Menu,
 } from "@mui/material";
 import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
-import {
-    Menu,
-} from "@mui/icons-material";
+import MenuIcon from "@mui/icons-material/Menu";
 
-const TopBar = ({ toggleSidebar,toggleDrawer }) => {
+const TopBar = ({ toggleSidebar, toggleDrawer,email,onLogout }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget); // Set the anchor element (open the menu)
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null); // Close the menu
+  };
+
+  const handleLogout = () => {
+    onLogout();
+    setAnchorEl(null); // Close the menu after logout
+  };
+
   return (
     <AppBar
       position="sticky"
@@ -32,13 +46,21 @@ const TopBar = ({ toggleSidebar,toggleDrawer }) => {
       <Toolbar sx={{ justifyContent: "space-between" }}>
         {/* Left Section */}
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  <IconButton  sx={{display: { xs: "none", sm: "block" }}} className="collapse-button" onClick={toggleSidebar}>
-                      <Menu />
-                  </IconButton>
+          <IconButton
+            sx={{ display: { xs: "none", sm: "block" } }}
+            className="collapse-button"
+            onClick={toggleSidebar}
+          >
+            <MenuIcon />
+          </IconButton>
 
-                  <IconButton  sx={{display: { xs: "block", sm: "none" }}} className="collapse-button" onClick={toggleDrawer}>
-                      <Menu />
-                  </IconButton>
+          <IconButton
+            sx={{ display: { xs: "block", sm: "none" } }}
+            className="collapse-button"
+            onClick={toggleDrawer}
+          >
+            <MenuIcon />
+          </IconButton>
           <Typography
             variant="h6"
             sx={{
@@ -87,7 +109,9 @@ const TopBar = ({ toggleSidebar,toggleDrawer }) => {
               height: 35,
               backgroundColor: "#6c757d",
               fontSize: "16px",
+              cursor: "pointer",
             }}
+            onClick={handleAvatarClick}
           >
             <img
               src="assets/search.png"
@@ -95,6 +119,53 @@ const TopBar = ({ toggleSidebar,toggleDrawer }) => {
               style={{ width: "100%", borderRadius: "50%" }}
             />
           </Avatar>
+          {/* Dropdown Menu */}
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            sx={{
+              "& .MuiPaper-root": {
+                borderRadius: "10px",
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                padding: "10px",
+                minWidth: "200px",
+              },
+            }}
+          >
+            <MenuItem
+              disabled
+              sx={{
+                fontSize: "14px",
+                color: "#6c757d",
+                fontWeight: "bold",
+                padding: "10px 15px",
+              }}
+            >
+              {email}
+            </MenuItem>
+            <MenuItem
+              onClick={handleLogout}
+              sx={{
+                fontSize: "14px",
+                color: "#000",
+                "&:hover": {
+                  backgroundColor: "#f0f0f0",
+                },
+                padding: "10px 15px",
+              }}
+            >
+              Logout
+            </MenuItem>
+          </Menu>
         </div>
       </Toolbar>
     </AppBar>
