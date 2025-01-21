@@ -11,7 +11,7 @@ const AppRoutes = () => {
     <Routes>
       {/* Public Route for Login */}
       <Route
-        path="/login"
+        path="/"
         element={isAuthenticated() ? <Navigate to="/home" /> : <Login />}
       />
 
@@ -22,7 +22,7 @@ const AppRoutes = () => {
       />
 
       {/* Redirect to Login by Default */}
-      <Route path="*" element={<Navigate to="/login" />} />
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 };
