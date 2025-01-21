@@ -18,7 +18,7 @@ const AppRoutes = () => {
       {/* Private Route for Home */}
       <Route
         path="/home"
-        element={isAuthenticated() ? <Home /> : <Navigate to="/login" />}
+        element={isAuthenticated() ? <Home /> : <Navigate to="/" />}
       />
 
       {/* Redirect to Login by Default */}
